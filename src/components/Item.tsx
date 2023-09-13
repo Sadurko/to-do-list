@@ -1,14 +1,15 @@
-import { ComponentsProps, FormControlLabel, createStyles, styled } from "@mui/material";
+import { ComponentsProps, FormControlLabel, styled } from "@mui/material";
 import CheckBox from "@mui/material/Checkbox";
-import { PropsWithChildren, FC, useState, ChangeEvent, Fragment, useMemo } from "react";
+import { PropsWithChildren, FC, useState, ChangeEvent } from "react";
 
 type Props = PropsWithChildren<{
-    label: string;
+    task: string;
+    done: boolean;
 }>
 
-const Item: FC<Props> = ({ label }) => {
-    
-    const [checked, setChecked] = useState(false);
+const Item: FC<Props> = ({ task, done }) => {
+
+    const [checked, setChecked] = useState(done);
 
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +33,7 @@ const Item: FC<Props> = ({ label }) => {
 
     return (
             <ToDoControlLabel
-                label={label}
+                label={task}
                 checked={checked}
                 control={
                     <CheckBox checked={checked} onChange={handleChange} />

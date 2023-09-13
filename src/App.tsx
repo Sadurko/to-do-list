@@ -1,11 +1,26 @@
 import './App.css';
-import Item from './components/Item';
+import ItemList from './components/ItemList';
 
-function App() {
+interface ITask {
+  task: string;
+  done: boolean;
+}
+
+
+const App = () => {
+
+  let newList: ITask[] = [
+    { task: 'Najdi si pracu', done: false },
+    { task: 'Umy riad', done: false},
+    { task: 'Dorob to do aplikaciu', done: false}
+  ];
+
+  // let emptyList: ITask[] = [];
+
+
   return (
     <div className="App">
-      <Item label='Task'/>
-      <Item label='Different task'/>
+      <ItemList array={newList}/>
     </div>
   );
 }
