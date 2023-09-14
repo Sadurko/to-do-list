@@ -9,9 +9,9 @@ interface ITask {
 
 const App = () => {
 
-  let newList: ITask[] = [
-    { task: 'Najdi si pracu', done: false },
-    { task: 'Umy riad', done: false},
+  let list: ITask[] = [
+    { task: 'Pridavanie taskov', done: false },
+    { task: 'Odstranenie taskov', done: false},
     { task: 'Dorob to do aplikaciu', done: false}
   ];
 
@@ -20,7 +20,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <ItemList array={newList}/>
+      <ItemList array={list}/>
     </div>
   );
 }

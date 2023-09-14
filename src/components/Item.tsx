@@ -1,11 +1,11 @@
 import { ComponentsProps, FormControlLabel, styled } from "@mui/material";
 import CheckBox from "@mui/material/Checkbox";
-import { PropsWithChildren, FC, useState, ChangeEvent } from "react";
+import { FC, useState, ChangeEvent } from "react";
 
-type Props = PropsWithChildren<{
+interface Props {
     task: string;
     done: boolean;
-}>
+}
 
 const Item: FC<Props> = ({ task, done }) => {
 
@@ -26,7 +26,8 @@ const Item: FC<Props> = ({ task, done }) => {
         shouldForwardProp: (prop) => prop !== 'checked'
     })<StyledProps>(({ checked }) => ({
         ...(checked && {
-            textDecoration: 'line-through'
+            textDecoration: 'line-through',
+            color: "grey"
         })
     }))
 

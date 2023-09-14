@@ -1,6 +1,7 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, Fragment, PropsWithChildren, useState } from 'react';
 import Item from './Item';
 import { Container, Grid } from '@mui/material';
+import Delete from './Delete';
 
 
 interface ITask {
@@ -8,38 +9,40 @@ interface ITask {
     done: boolean;
 }
 
-type Props = PropsWithChildren<{
+interface Props {
     array: Array<ITask>;
-}>
+}
 
 const ItemList: FC<Props> = ({ array }) => {
 
-    /*
-    const addTask = (newTask: string) => {
-        this.setState(prevState => ({
-            tasks: [...(prevState.tasks ?? []), newTask]
-        }))
+    const [tasks, setTasks] = useState(array);
+
+    const removeTask = (index: number) => {
+        console.log(`Removing task on index: ${index}`)
+
+        let editTasks = [...tasks];
+
+        editTasks.splice(index, 1);
+        setTasks(editTasks);
     }
-    */
-    // const indexes = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-    if (array.length === 0) {
+    
+
+    if (tasks.length === 0) {
         return (<Container>No tasks to do</Container>);
     }
 
-    const indexes = Array.from(Array(array.length).keys());
+    const indexes = Array.from(Array(tasks.length).keys());
     
 
     return (
-        <Container
-            maxWidth='sm'
-            component='main'
-        >
-            <Grid>
-                {indexes.map(i => (
-                    <Item task={array[i].task} done={array[i].done} />
-                ))}
-            </Grid>
-        </Container>
+        <Grid container spacing={3}>
+            {indexes.map(i => (
+                <Grid item xs={12} key={i}>
+                    <Item task={tasks[i].task} done={tasks[i].done} />
+                    <Delete onClick={() => removeTask(i)}/>
+                </Grid>
+            ))}
+        </Grid>
     );
 }
 
