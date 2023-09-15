@@ -7,7 +7,8 @@ interface Props {
     onClick: () => void;
 }
 
-const Delete: FC<Props> = ({ onClick }) => (
+// delete button for each task
+const DeleteTask: FC<Props> = ({ onClick }) => (
     <IconButton
         onClick={onClick}
         sx={{
@@ -18,4 +19,4 @@ const Delete: FC<Props> = ({ onClick }) => (
     </IconButton>
 )
 
-export default Delete;
+export default DeleteTask;

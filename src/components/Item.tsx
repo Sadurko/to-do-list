@@ -22,6 +22,7 @@ const Item: FC<Props> = ({ task, done }) => {
         checked?: boolean;
     }
 
+    // styled label for strike through and color change
     const ToDoControlLabel = styled(FormControlLabel, {
         shouldForwardProp: (prop) => prop !== 'checked'
     })<StyledProps>(({ checked }) => ({

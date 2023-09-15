@@ -1,7 +1,8 @@
-import { FC, Fragment, PropsWithChildren, useState } from 'react';
+import { FC, useState } from 'react';
 import Item from './Item';
-import { Container, Grid } from '@mui/material';
-import Delete from './Delete';
+import { Grid, Button } from '@mui/material';
+import DeleteTask from './DeleteTask';
+import Popup from 'reactjs-popup';
 
 
 interface ITask {
@@ -9,27 +10,56 @@ interface ITask {
     done: boolean;
 }
 
-interface Props {
+type Props = {
     array: Array<ITask>;
 }
 
 const ItemList: FC<Props> = ({ array }) => {
 
     const [tasks, setTasks] = useState(array);
+    const [task, setTask] = useState('');
 
+    // remove task on certain index
     const removeTask = (index: number) => {
-        console.log(`Removing task on index: ${index}`)
+        console.log(`Removing task "${tasks[index].task}" from index: ${index}`)
 
         let editTasks = [...tasks];
 
         editTasks.splice(index, 1);
         setTasks(editTasks);
     }
-    
 
-    if (tasks.length === 0) {
-        return (<Container>No tasks to do</Container>);
+    // add new task
+    const addTask = (taskLabel: string) => {
+        console.log(`Adding task: ${taskLabel}`);
+
+        let editTasks = [...tasks, { task: taskLabel, done: false }];
+
+        setTasks(editTasks);
     }
+
+
+    // in case there are no tasks show just text and option to add task
+    if (tasks.length === 0) {
+        return (
+        <Grid container spacing={3}>
+            <Grid item xs={12}>
+                No tasks to do
+            </Grid>
+            <Grid item xs={12}>
+                <Popup trigger={<Button>Add task</Button>} position='right center'>
+                    <>
+                        <input
+                            value={task}
+                            onChange={e => setTask(e.target.value)}
+                        />
+                        <Button onClick={() => addTask(task)}>Add</Button>
+                    </>
+                </Popup>
+            </Grid>
+        </Grid>);
+    }
+
 
     const indexes = Array.from(Array(tasks.length).keys());
     
@@ -39,9 +69,20 @@ const ItemList: FC<Props> = ({ array }) => {
             {indexes.map(i => (
                 <Grid item xs={12} key={i}>
                     <Item task={tasks[i].task} done={tasks[i].done} />
-                    <Delete onClick={() => removeTask(i)}/>
+                    <DeleteTask onClick={() => removeTask(i)}/>
                 </Grid>
             ))}
+            <Grid item xs={12}>
+                <Popup trigger={<Button>Add task</Button>} position='right center'>
+                    <>
+                        <input
+                            value={task}
+                            onChange={e => setTask(e.target.value)}
+                        />
+                        <Button onClick={() => addTask(task)}>Add</Button>
+                    </>
+                </Popup>
+            </Grid>
         </Grid>
     );
 }
