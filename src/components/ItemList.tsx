@@ -19,6 +19,12 @@ const ItemList: FC<Props> = ({ array }) => {
     const [tasks, setTasks] = useState(array);
     const [task, setTask] = useState('');
 
+    const saveTasks = (taskArray: Array<ITask>) => {
+        localStorage.setItem('list', JSON.stringify(taskArray));
+
+        setTasks(taskArray);
+    }
+
     // remove task on certain index
     const removeTask = (index: number) => {
         console.log(`Removing task "${tasks[index].task}" from index: ${index}`)
@@ -26,7 +32,7 @@ const ItemList: FC<Props> = ({ array }) => {
         let editTasks = [...tasks];
 
         editTasks.splice(index, 1);
-        setTasks(editTasks);
+        saveTasks(editTasks);
     }
 
     // add new task
@@ -35,7 +41,7 @@ const ItemList: FC<Props> = ({ array }) => {
 
         let editTasks = [...tasks, { task: taskLabel, done: false }];
 
-        setTasks(editTasks);
+        saveTasks(editTasks);
     }
 
 

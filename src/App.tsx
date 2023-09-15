@@ -9,13 +9,25 @@ interface ITask {
 
 const App = () => {
 
+  let list: ITask[];
+
+
+  /*
   let list: ITask[] = [
     { task: 'Pridavanie taskov', done: false },
     { task: 'Odstranenie taskov', done: false},
     { task: 'Dorob to do aplikaciu', done: false}
   ];
+  */
 
-  // let emptyList: ITask[] = [];
+  // localStorage.setItem('list', JSON.stringify(list));
+
+  if (localStorage.getItem('list') === null) {
+    list = [];
+  } else {
+    list = JSON.parse(localStorage.getItem('list') || '{}');
+  }
+
 
 
   return (
