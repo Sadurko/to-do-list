@@ -5,14 +5,16 @@ import { FC, useState, ChangeEvent } from "react";
 interface Props {
     task: string;
     done: boolean;
+    onChange: () => void;
 }
 
-const Item: FC<Props> = ({ task, done }) => {
+const Item: FC<Props> = ({ task, done, onChange }) => {
 
     const [checked, setChecked] = useState(done);
 
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        onChange();
         setChecked(event.target.checked);
     }
 
