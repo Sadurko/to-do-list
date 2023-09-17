@@ -3,9 +3,10 @@ import { FC, PropsWithChildren, useState } from "react";
 
 type Props = PropsWithChildren<{
     onConfirmation: () => void;
+    text: string;
 }>;
 
-const DeleteAllTasks: FC<Props> = ({ onConfirmation, children }) => {
+const DeleteAll: FC<Props> = ({ onConfirmation, children, text }) => {
 
     const [open, setOpen] = useState(false);
 
@@ -26,11 +27,16 @@ const DeleteAllTasks: FC<Props> = ({ onConfirmation, children }) => {
         <>
             <Button onClick={handleClickOpen}>{children}</Button>
             
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                fullWidth
+                maxWidth='sm'
+            >
                 <DialogTitle>Deleting all tasks</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Are you sure you want to delete all tasks?
+                        {text}
                     </DialogContentText>
                     <DialogActions>
                         <Button onClick={handleClose}>No</Button>
@@ -42,4 +48,4 @@ const DeleteAllTasks: FC<Props> = ({ onConfirmation, children }) => {
     )
 }
 
-export default DeleteAllTasks;
+export default DeleteAll;

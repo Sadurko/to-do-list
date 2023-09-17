@@ -8,7 +8,7 @@ interface Props {
     onChange: () => void;
 }
 
-const Item: FC<Props> = ({ task, done, onChange }) => {
+const Task: FC<Props> = ({ task, done, onChange }) => {
 
     //console.log(`${task} rerender: ${done}`);
 
@@ -30,6 +30,7 @@ const Item: FC<Props> = ({ task, done, onChange }) => {
 
     return (
             <ToDoControlLabel
+                sx={{ ml: 1 }}
                 label={task}
                 checked={done}
                 control={
@@ -39,4 +40,4 @@ const Item: FC<Props> = ({ task, done, onChange }) => {
     );
 }
 
-export default Item;
+export default Task;

@@ -1,8 +1,15 @@
 import { FC, useRef, useState } from 'react';
-import { Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions } from '@mui/material';
+import { Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Paper, styled } from '@mui/material';
+import Box from '@mui/material/Box';
 import DeleteTask from './DeleteTask';
-import DeleteAllTasks from './DeleteAllTasks';
-import Item from './Item';
+import DeleteAll from './DeleteAll';
+import Task from './Task';
+
+
+const Item = styled(Paper)(() => ({
+    elevation: 1,
+    backgroundColor: 'lightgray',
+  }));
 
 
 interface ITask {
@@ -92,7 +99,12 @@ const ItemList: FC<Props> = ({ array }) => {
         }
 
         return (
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                fullWidth
+                maxWidth='sm'
+            >
                 <DialogTitle>Add new task to do</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -121,22 +133,39 @@ const ItemList: FC<Props> = ({ array }) => {
 
     return (
         <>
-            <DeleteAllTasks onConfirmation={() => removeAllTasks()}>Remove all tasks</DeleteAllTasks>
-            <Button onClick={() => removeAllFinishedTasks()}>Remove all finished tasks</Button>
+            <DeleteAll
+                onConfirmation={() => removeAllTasks()}
+                text='Are you sure you want to remove all tasks?'
+            >Remove all tasks</DeleteAll>
+            <DeleteAll
+                onConfirmation={() => removeAllFinishedTasks()}
+                text='Are you sure you want to remove all finished tasks?'
+            >Remove all finished tasks</DeleteAll>
 
-            <Grid container spacing={3}>
+            <Grid container spacing={2} justifyContent='center' alignItems="center">
                 {
                     tasks.length === 0 ?
                     <Grid item xs={12}>No tasks to do</Grid> : // if there are no tasks to do
-                    indexes.map(i => {
-                        console.log(`Task: ${tasks[i].task} done: ${tasks[i].done}`);
-                        return (
-                        <Grid item xs={12} key={i}>
-                            <Item task={tasks[i].task} done={tasks[i].done} onChange={() => toggleTask(i)}/>
-                            <DeleteTask onClick={() => removeTask(i)}/>
+                    indexes.map(i => (
+                        <Grid
+                            item
+                            xs={12}
+                            key={i}
+                            sx={{ display: 'flex', justifyContent: 'center' }}
+                        >
+                            <Item sx={{ width: 600, mr: 1, display: 'flex', justifyContent: 'flex-start' }}>
+                                <Task
+                                    task={tasks[i].task}
+                                    done={tasks[i].done}
+                                    onChange={() => toggleTask(i)}
+                                />
+                            </Item>
+                            <Item sx={{ flexShrink: 0 }}>
+                                <DeleteTask onClick={() => removeTask(i)}/>
+                            </Item>
                         </Grid>
                         )
-                    })
+                    )
                 }
                 <Grid item xs={12}>
                     <Button variant='outlined' onClick={handleClickOpen}>
