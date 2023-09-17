@@ -1,7 +1,8 @@
 import { FC, useRef, useState } from 'react';
-import Item from './Item';
 import { Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions } from '@mui/material';
 import DeleteTask from './DeleteTask';
+import DeleteAllTasks from './DeleteAllTasks';
+import Item from './Item';
 
 
 interface ITask {
@@ -16,16 +17,19 @@ type Props = {
 const ItemList: FC<Props> = ({ array }) => {
 
     const [tasks, setTasks] = useState(array);
-    const [taskDone, setTaskDone] = useState(false);
 
-
-    // useState for dialog window
-    const [open, setOpen] = useState(false);
 
     const saveTasks = (taskArray: Array<ITask>) => {
         localStorage.setItem('list', JSON.stringify(taskArray));
 
         setTasks(taskArray);
+    }
+
+    const toggleTask = (index: number) => {
+        let editTasks = [...tasks];
+
+        editTasks[index].done = !editTasks[index].done;
+        saveTasks(editTasks);
     }
 
     // remove task at certain index
@@ -62,6 +66,10 @@ const ItemList: FC<Props> = ({ array }) => {
 
         saveTasks(editTasks);
     }
+
+
+    // useState for dialog window
+    const [open, setOpen] = useState(false);
 
 
     // handle opening of dialog window
@@ -113,19 +121,22 @@ const ItemList: FC<Props> = ({ array }) => {
 
     return (
         <>
-            <Button onClick={() => removeAllTasks()}>Remove all tasks</Button>
+            <DeleteAllTasks onConfirmation={() => removeAllTasks()}>Remove all tasks</DeleteAllTasks>
             <Button onClick={() => removeAllFinishedTasks()}>Remove all finished tasks</Button>
 
             <Grid container spacing={3}>
                 {
                     tasks.length === 0 ?
                     <Grid item xs={12}>No tasks to do</Grid> : // if there are no tasks to do
-                    indexes.map(i => (
+                    indexes.map(i => {
+                        console.log(`Task: ${tasks[i].task} done: ${tasks[i].done}`);
+                        return (
                         <Grid item xs={12} key={i}>
-                            <Item task={tasks[i].task} done={tasks[i].done} onChange={() => tasks[i].done = !tasks[i].done}/>
+                            <Item task={tasks[i].task} done={tasks[i].done} onChange={() => toggleTask(i)}/>
                             <DeleteTask onClick={() => removeTask(i)}/>
                         </Grid>
-                    ))
+                        )
+                    })
                 }
                 <Grid item xs={12}>
                     <Button variant='outlined' onClick={handleClickOpen}>

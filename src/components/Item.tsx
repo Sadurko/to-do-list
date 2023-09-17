@@ -1,6 +1,6 @@
 import { ComponentsProps, FormControlLabel, styled } from "@mui/material";
 import CheckBox from "@mui/material/Checkbox";
-import { FC, useState, ChangeEvent } from "react";
+import { FC } from "react";
 
 interface Props {
     task: string;
@@ -10,14 +10,7 @@ interface Props {
 
 const Item: FC<Props> = ({ task, done, onChange }) => {
 
-    const [checked, setChecked] = useState(done);
-
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        onChange();
-        setChecked(event.target.checked);
-    }
-
+    //console.log(`${task} rerender: ${done}`);
 
     // strike through the text using styled component
     interface StyledProps extends ComponentsProps {
@@ -38,9 +31,9 @@ const Item: FC<Props> = ({ task, done, onChange }) => {
     return (
             <ToDoControlLabel
                 label={task}
-                checked={checked}
+                checked={done}
                 control={
-                    <CheckBox checked={checked} onChange={handleChange} />
+                    <CheckBox checked={done} onChange={onChange} />
                 }
             />
     );
