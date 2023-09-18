@@ -1,9 +1,9 @@
 import { FC, useRef, useState } from 'react';
-import { Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Paper, styled } from '@mui/material';
-import Box from '@mui/material/Box';
+import { Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Paper, styled, IconButton } from '@mui/material';
 import DeleteTask from './DeleteTask';
 import DeleteAll from './DeleteAll';
 import Task from './Task';
+import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 
 
 const Item = styled(Paper)(() => ({
@@ -90,6 +90,10 @@ const ItemList: FC<Props> = ({ array }) => {
         const valueRef = useRef<HTMLInputElement>();
 
         const handleClose = () => {
+            setOpen(false);
+        }
+
+        const handleAdd = () => {
             if (valueRef.current != null) {
                 const value = valueRef.current.value;
                 if (value !== '') { addTask(value); }
@@ -120,7 +124,8 @@ const ItemList: FC<Props> = ({ array }) => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Add</Button>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleAdd}>Add</Button>
                 </DialogActions>
             </Dialog>
         )
@@ -168,9 +173,9 @@ const ItemList: FC<Props> = ({ array }) => {
                     )
                 }
                 <Grid item xs={12}>
-                    <Button variant='outlined' onClick={handleClickOpen}>
-                        Add task
-                    </Button>
+                    <IconButton onClick={handleClickOpen}>
+                        <AddCircleOutlinedIcon sx={{ fontSize: '40px' }}/>
+                    </IconButton>
 
                     <AddDialog/>
                 </Grid>
