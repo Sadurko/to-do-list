@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Paper, styled, IconButton } from '@mui/material';
 import DeleteTask from './DeleteTask';
 import DeleteAll from './DeleteAll';
@@ -24,6 +24,8 @@ type Props = {
 const ItemList: FC<Props> = ({ array }) => {
 
     const [tasks, setTasks] = useState(array);
+    // useState for dialog window
+    const [open, setOpen] = useState(false);
 
 
     const saveTasks = (taskArray: Array<ITask>) => {
@@ -33,7 +35,7 @@ const ItemList: FC<Props> = ({ array }) => {
     }
 
     const toggleTask = (index: number) => {
-        let editTasks = [...tasks];
+        const editTasks = [...tasks];
 
         editTasks[index].done = !editTasks[index].done;
         saveTasks(editTasks);
@@ -43,7 +45,7 @@ const ItemList: FC<Props> = ({ array }) => {
     const removeTask = (index: number) => {
         console.log(`Removing task "${tasks[index].task}" from index: ${index}`)
 
-        let editTasks = [...tasks];
+        const editTasks = [...tasks];
 
         editTasks.splice(index, 1);
         saveTasks(editTasks);
@@ -60,7 +62,7 @@ const ItemList: FC<Props> = ({ array }) => {
     const removeAllFinishedTasks = () => {
         console.log(`Removing all finished tasks`);
 
-        let filteredTasks = tasks.filter((value) => value.done !== true);
+        const filteredTasks = tasks.filter((value) => value.done !== true);
 
         saveTasks(filteredTasks);
     }
@@ -69,14 +71,10 @@ const ItemList: FC<Props> = ({ array }) => {
     const addTask = (taskLabel: string) => {
         console.log(`Adding task: ${taskLabel}`);
 
-        let editTasks = [...tasks, { task: taskLabel, done: false }];
+        const editTasks = [...tasks, { task: taskLabel, done: false }];
 
         saveTasks(editTasks);
     }
-
-
-    // useState for dialog window
-    const [open, setOpen] = useState(false);
 
 
     // handle opening of dialog window

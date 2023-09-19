@@ -1,5 +1,7 @@
+import { Button, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import './App.css';
-import ItemList from './components/ItemList';
+import TaskList from './components/TaskList';
+import React, { useMemo, useState } from 'react';
 
 interface ITask {
   task: string;
@@ -10,6 +12,26 @@ interface ITask {
 const App = () => {
 
   let list: ITask[];
+
+  const [mode, setMode] = useState< 'light' | 'dark'>('light');
+
+  const colorMode = useMemo(
+    () => ({
+      toggleMode: () => {
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+      },
+    }),
+    []
+  )
+
+  const theme = useMemo(
+    () => createTheme({
+      palette: {
+        mode
+      }
+    }),
+    [mode]
+  )
 
 
   /*
@@ -31,9 +53,17 @@ const App = () => {
 
 
   return (
-    <div className="App">
-      <ItemList array={list}/>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline/>
+
+      <Button onClick={() => colorMode.toggleMode()}>
+        Dark mode
+      </Button>
+
+      <div className="App">
+        <TaskList array={list}/>
+      </div>
+    </ThemeProvider>
   );
 }
 

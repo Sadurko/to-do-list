@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import { FC, PropsWithChildren, useState } from "react";
+import React, { FC, PropsWithChildren, useState } from "react";
 
 type Props = PropsWithChildren<{
     onConfirmation: () => void;

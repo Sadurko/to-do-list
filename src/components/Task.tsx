@@ -1,6 +1,6 @@
 import { ComponentsProps, FormControlLabel, styled } from "@mui/material";
 import CheckBox from "@mui/material/Checkbox";
-import { FC } from "react";
+import React, { FC } from "react";
 
 interface Props {
     task: string;

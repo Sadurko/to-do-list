@@ -1,5 +1,5 @@
 import { IconButton } from '@mui/material';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutline';
 
 
