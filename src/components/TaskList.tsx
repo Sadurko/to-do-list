@@ -1,15 +1,29 @@
 import React, { FC, useRef, useState } from 'react';
-import { Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Paper, styled, IconButton } from '@mui/material';
+import { 
+    Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    TextField,
+    DialogActions,
+    IconButton,
+    List,
+    ListItem,
+    ListItemText,
+    ListItemButton,
+    ListItemIcon,
+    Checkbox
+} from '@mui/material';
 import DeleteTask from './DeleteTask';
 import DeleteAll from './DeleteAll';
-import Task from './Task';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 
 
-const Item = styled(Paper)(() => ({
-    elevation: 1,
-    backgroundColor: 'lightgray',
-  }));
+// const Item = styled(Paper)(() => ({
+//     elevation: 1,
+//     backgroundColor: 'lightgray',
+//   }));
 
 
 interface ITask {
@@ -139,45 +153,55 @@ const ItemList: FC<Props> = ({ array }) => {
             <DeleteAll
                 onConfirmation={() => removeAllTasks()}
                 text='Are you sure you want to remove all tasks?'
-            >Remove all tasks</DeleteAll>
+            >
+                Remove all tasks
+            </DeleteAll>
+
             <DeleteAll
                 onConfirmation={() => removeAllFinishedTasks()}
                 text='Are you sure you want to remove all finished tasks?'
-            >Remove all finished tasks</DeleteAll>
+            >
+                Remove all finished tasks
+            </DeleteAll>
 
-            <Grid container spacing={2} justifyContent='center' alignItems="center">
+            <List sx={{ width: '100%', maxWidth: 450 }}>
                 {
-                    tasks.length === 0 ?
-                    <Grid item xs={12}>No tasks to do</Grid> : // if there are no tasks to do
-                    indexes.map(i => (
-                        <Grid
-                            item
-                            xs={12}
+                    (tasks.length === 0)
+                    ? <ListItem>
+                        <ListItemText>No tasks to do</ListItemText>
+                    </ListItem> // if there are no tasks to do
+                    : indexes.map(i => (
+                        <ListItem
                             key={i}
-                            sx={{ display: 'flex', justifyContent: 'center' }}
+                            secondaryAction={
+                                <IconButton edge='end'>
+                                    <DeleteTask onClick={() => removeTask(i)} />
+                                </IconButton>
+                            }
                         >
-                            <Item sx={{ width: 600, mr: 1, display: 'flex', justifyContent: 'flex-start' }}>
-                                <Task
-                                    task={tasks[i].task}
-                                    done={tasks[i].done}
-                                    onChange={() => toggleTask(i)}
-                                />
-                            </Item>
-                            <Item sx={{ flexShrink: 0 }}>
-                                <DeleteTask onClick={() => removeTask(i)}/>
-                            </Item>
-                        </Grid>
+                            <ListItemButton role={undefined} onClick={() => toggleTask(i)} dense>
+                                <ListItemIcon>
+                                    <Checkbox
+                                        edge='start'
+                                        checked={tasks[i].done}
+                                        tabIndex={-1}
+                                        disableRipple
+                                        inputProps={{ 'aria-labelledby': tasks[i].task }}
+                                    />
+                                </ListItemIcon>
+                                <ListItemText id={tasks[i].task} primary={tasks[i].task} />
+                            </ListItemButton>
+                        </ListItem>
                         )
                     )
                 }
-                <Grid item xs={12}>
-                    <IconButton onClick={handleClickOpen}>
-                        <AddCircleOutlinedIcon sx={{ fontSize: '40px' }}/>
-                    </IconButton>
+            </List>
 
-                    <AddDialog/>
-                </Grid>
-            </Grid>
+            <IconButton onClick={handleClickOpen}>
+                <AddCircleOutlinedIcon sx={{ fontSize: '40px' }}/>
+            </IconButton>
+
+            <AddDialog/>
         </>
     );
 }
