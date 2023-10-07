@@ -2,6 +2,7 @@ import { Button, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import './App.css';
 import TaskList from './components/TaskList';
 import React, { useMemo, useState } from 'react';
+import usePageTitle from './hooks/usePageTitle';
 
 interface ITask {
   task: string;
@@ -10,6 +11,8 @@ interface ITask {
 
 
 const App = () => {
+
+  usePageTitle();
 
   let list: ITask[];
 
