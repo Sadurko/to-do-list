@@ -10,8 +10,6 @@ interface Props {
 
 const Task: FC<Props> = ({ task, done, onChange }) => {
 
-    //console.log(`${task} rerender: ${done}`);
-
     // strike through the text using styled component
     interface StyledProps extends ComponentsProps {
         checked?: boolean;

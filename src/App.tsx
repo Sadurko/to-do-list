@@ -3,18 +3,14 @@ import './App.css';
 import TaskList from './components/TaskList';
 import React, { useMemo, useState } from 'react';
 import usePageTitle from './hooks/usePageTitle';
-
-interface ITask {
-  task: string;
-  done: boolean;
-}
+import { Task } from './reducer';
 
 
 const App = () => {
 
   usePageTitle();
 
-  let list: ITask[];
+  let list: Task[];
 
   const [mode, setMode] = useState< 'light' | 'dark'>('light');
 
@@ -37,22 +33,21 @@ const App = () => {
   )
 
 
-  /*
-  let list: ITask[] = [
-    { task: 'Pridavanie taskov', done: false },
-    { task: 'Odstranenie taskov', done: false},
-    { task: 'Dorob to do aplikaciu', done: false}
-  ];
-  */
+  
+  // const list: Task[] = [
+  //   { text: 'Pridavanie taskov', completed: false },
+  //   { text: 'Odstranenie taskov', completed: false},
+  //   { text: 'Dorob to do aplikaciu', completed: false}
+  // ];
+  
 
   // localStorage.setItem('list', JSON.stringify(list));
 
   if (localStorage.getItem('list') === null) {
     list = [];
   } else {
-    list = JSON.parse(localStorage.getItem('list') || '{}');
+    list = JSON.parse(localStorage.getItem('list') || '[]');
   }
-
 
 
   return (
