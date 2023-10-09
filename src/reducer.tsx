@@ -1,19 +1,16 @@
 interface Task {
     text: string;
     completed: boolean;
+    added: string;
+    comment?: string;
 }
 
-// interface Action {
-//     type: 'add' | 'remove' | 'edit' | 'clear';
-//     text?: string;
-//     index?: number;
-// }
 
-type ACTION_TYPE = {type: 'add', text: string}
+type ACTION_TYPE = {type: 'add', text: string, comment?: string}
                  | {type: 'remove', index: number}
                  | {type: 'removeDone'}
                  | {type: 'clear'}
-                 | {type: 'edit', text: string, index: number}
+                 | {type: 'edit', text: string, index: number, comment?: string}
                  | {type: 'toggle', index: number}
                  
 
@@ -26,7 +23,9 @@ const reducer = (prevState: Task[], action: ACTION_TYPE) => {
             const newState = [...prevState];
             newState.push({
                 text:action.text,
-                completed: false
+                completed: false,
+                added: Date(),
+                comment: action.comment
             })
 
             return newState
@@ -46,7 +45,9 @@ const reducer = (prevState: Task[], action: ACTION_TYPE) => {
             const newState = [...prevState];
             newState.splice(action.index, 1, {
                 text: action.text,
-                completed: false
+                completed: prevState[action.index].completed,
+                added: prevState[action.index].added,
+                comment: action.comment
             });
 
             return newState;
@@ -54,7 +55,6 @@ const reducer = (prevState: Task[], action: ACTION_TYPE) => {
         case 'toggle': {
             const newState = [...prevState];
             newState[action.index].completed = !newState[action.index].completed;
-
 
             return newState;
         }

@@ -1,12 +1,5 @@
-import React, { FC, useRef, useState, useReducer, useEffect } from 'react';
+import React, { FC, useRef, useReducer, useEffect } from 'react';
 import { 
-    Button,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
-    TextField,
-    DialogActions,
     IconButton,
     List,
     ListItem,
@@ -16,10 +9,11 @@ import {
     Checkbox
 } from '@mui/material';
 import DeleteAll from './DeleteAll';
-import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import { reducer, Task } from '../reducer';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutline';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import NotesOutlinedIcon from '@mui/icons-material/NotesOutlined';
+import DialogAdd from './DialogAdd';
 
 
 type Props = {
@@ -29,72 +23,29 @@ type Props = {
 
 const ItemList: FC<Props> = ({ array }) => {
 
+    // reducer for working with Task array
     const [state, dispatch] = useReducer(reducer, array)
-    // useState for dialog window
-    const [open, setOpen] = useState(false);
 
+    // ref to dialog window
+    const ref = useRef<DialogAdd>(null);
     
+    // saving task array to local storage when changed
     useEffect(() => {
         console.log('Saving current state');
 
         localStorage.setItem('list', JSON.stringify(state));
     }, [state])
 
+    const handleTest = () => {
+        if (ref.current != null) {
+            const text = ref.current.state.text;
+            const comment = ref.current.state.comment;
 
-    // handle opening of dialog window
-    const handleClickOpen = () => {
-        setOpen(true);
+            if (text !== '') { dispatch({type: 'add', text: text, comment: comment})}
+        }
     }
 
-
-    // Dialog window for adding new tasks
-    const AddDialog = () => {
-        const valueRef = useRef<HTMLInputElement>();
-
-        const handleClose = () => {
-            setOpen(false);
-        }
-
-        const handleAdd = () => {
-            if (valueRef.current != null) {
-                const value = valueRef.current.value;
-                if (value !== '') { dispatch({type: 'add', text: value}) }
-            }
-
-            setOpen(false);
-        }
-
-        return (
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                fullWidth
-                maxWidth='sm'
-            >
-                <DialogTitle>Add new task to do</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Enter task to do:
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        id='task'
-                        label='Task'
-                        fullWidth
-                        variant='outlined'
-                        inputRef={valueRef}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleAdd}>Add</Button>
-                </DialogActions>
-            </Dialog>
-        )
-    }
-
-
-
+    // indexes for list render
     const indexes = Array.from(Array(state.length).keys());
     
 
@@ -131,6 +82,9 @@ const ItemList: FC<Props> = ({ array }) => {
                                     <IconButton edge='end' onClick={() => dispatch({type: 'remove', index: i})} sx={{ ml: '1rem' }}>
                                         <DeleteOutlinedIcon sx={{ color: 'black' }}/>
                                     </IconButton>
+                                    <IconButton edge='end' sx={{ ml: '1rem' }}>
+                                        <NotesOutlinedIcon sx={{ color: 'black' }} />
+                                    </IconButton>
                                 </>
                             }
                             disablePadding
@@ -153,11 +107,7 @@ const ItemList: FC<Props> = ({ array }) => {
                 }
             </List>
 
-            <IconButton onClick={handleClickOpen}>
-                <AddCircleOutlinedIcon sx={{ fontSize: '40px' }}/>
-            </IconButton>
-
-            <AddDialog/>
+            <DialogAdd ref={ref} onAdd={() => handleTest()}/>
         </>
     );
 }
