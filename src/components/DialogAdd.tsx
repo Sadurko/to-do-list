@@ -7,7 +7,8 @@ import {
     DialogTitle,
     TextField } from '@mui/material';
 import React, { createRef } from 'react'
-type MyFunc = {
+
+type Input = {
     onAdd: () => void;
 }
 
@@ -17,7 +18,7 @@ type MyState = {
     open: boolean;
 };
 
-class DialogAdd extends React.Component<MyFunc, MyState> {
+class DialogAdd extends React.Component<Input, MyState> {
 
     firstRef: React.RefObject<HTMLInputElement>;
 

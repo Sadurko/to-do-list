@@ -8,12 +8,12 @@ import {
     ListItemIcon,
     Checkbox
 } from '@mui/material';
-import DeleteAll from './DeleteAll';
+import DialogRemove from './DialogRemove';
 import { reducer, Task } from '../reducer';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutline';
-import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import NotesOutlinedIcon from '@mui/icons-material/NotesOutlined';
 import DialogAdd from './DialogAdd';
+import DialogEdit from './DialogEdit';
 
 
 type Props = {
@@ -28,6 +28,8 @@ const ItemList: FC<Props> = ({ array }) => {
 
     // ref to dialog window
     const ref = useRef<DialogAdd>(null);
+    const refTest = useRef<DialogEdit>(null);
+    
     
     // saving task array to local storage when changed
     useEffect(() => {
@@ -36,12 +38,24 @@ const ItemList: FC<Props> = ({ array }) => {
         localStorage.setItem('list', JSON.stringify(state));
     }, [state])
 
-    const handleTest = () => {
+    const handleAdd = () => {
         if (ref.current != null) {
             const text = ref.current.state.text;
             const comment = ref.current.state.comment;
 
             if (text !== '') { dispatch({type: 'add', text: text, comment: comment})}
+        }
+    }
+
+    const handleEdit = (index: number) => {
+        if (refTest.current != null) {
+            const text = refTest.current.state.text;
+            const comment = refTest.current.state.comment;
+
+            console.log(text)
+            console.log(comment)
+
+            if (text !== '') { dispatch({type: 'edit', index: index, text: text, comment: comment})}
         }
     }
 
@@ -51,21 +65,21 @@ const ItemList: FC<Props> = ({ array }) => {
 
     return (
         <>
-            <DeleteAll
+            <DialogRemove
                 onConfirmation={() => dispatch({type: 'clear'})}
                 text='Are you sure you want to remove all tasks?'
             >
                 Remove all tasks
-            </DeleteAll>
+            </DialogRemove>
 
-            <DeleteAll
+            <DialogRemove
                 onConfirmation={() => dispatch({type: 'removeDone'})}
                 text='Are you sure you want to remove all finished tasks?'
             >
                 Remove all finished tasks
-            </DeleteAll>
+            </DialogRemove>
 
-            <List sx={{ width: '100%', maxWidth: 450 }}>
+            <List sx={{ width: '100%', maxWidth: 600 }}>
                 {
                     (state.length === 0)
                     ? <ListItem>
@@ -76,9 +90,8 @@ const ItemList: FC<Props> = ({ array }) => {
                             key={i}
                             secondaryAction={
                                 <>
-                                    <IconButton edge='end' onClick={() => dispatch({type: 'remove', index: i})}>
-                                        <CreateOutlinedIcon sx={{ color: 'black' }}/>
-                                    </IconButton>
+                                    <DialogEdit ref={refTest} onAdd={() => handleEdit(i)} text={state[i].text} comment={state[i].comment || ''} />
+
                                     <IconButton edge='end' onClick={() => dispatch({type: 'remove', index: i})} sx={{ ml: '1rem' }}>
                                         <DeleteOutlinedIcon sx={{ color: 'black' }}/>
                                     </IconButton>
@@ -107,7 +120,7 @@ const ItemList: FC<Props> = ({ array }) => {
                 }
             </List>
 
-            <DialogAdd ref={ref} onAdd={() => handleTest()}/>
+            <DialogAdd ref={ref} onAdd={() => handleAdd()}/>
         </>
     );
 }
