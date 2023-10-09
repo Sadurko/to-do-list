@@ -8,13 +8,13 @@ import {
     IconButton,
     TextField
 } from '@mui/material';
-import React, { createRef } from 'react'
+import React from 'react'
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 
 type Input = {
     onAdd: () => void;
-    text: string;
-    comment: string;
+    inputText: string;
+    inputComment: string;
 }
 
 type MyState = {
@@ -25,19 +25,16 @@ type MyState = {
 
 class DialogAdd extends React.Component<Input, MyState> {
 
-    firstRef: React.RefObject<HTMLInputElement>;
-
     constructor(props) {
         super(props);
         this.state = {
-            text: this.props.text,
-            comment: this.props.comment,
+            text: '',
+            comment: '',
             open: false
         };
-      this.firstRef = createRef();
   
-      this.handleChange = this.handleChange.bind(this);
-      this.handleChangeComment = this.handleChangeComment.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeComment = this.handleChangeComment.bind(this);
     }
   
     handleChange = (event) => {
@@ -58,6 +55,8 @@ class DialogAdd extends React.Component<Input, MyState> {
 
     handleAdd = () => {
         const { onAdd } = this.props;
+
+        console.log('Text ' + this.state.text + ' Comment ' + this.state.comment)
 
         onAdd();
         
@@ -88,7 +87,7 @@ class DialogAdd extends React.Component<Input, MyState> {
                             fullWidth
                             variant='outlined'
                             onChange={this.handleChange}
-                            defaultValue={this.props.text}
+                            defaultValue={this.props.inputText}
                         />
                         <TextField
                             autoFocus
@@ -100,7 +99,7 @@ class DialogAdd extends React.Component<Input, MyState> {
                             onChange={this.handleChangeComment}
                             multiline
                             rows={4}
-                            defaultValue={this.props.comment}
+                            defaultValue={this.props.inputComment}
                         />
                     </DialogContent>
                     <DialogActions>

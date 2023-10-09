@@ -6,7 +6,7 @@ import {
     DialogContentText,
     DialogTitle,
     TextField } from '@mui/material';
-import React, { createRef } from 'react'
+import React from 'react'
 
 type Input = {
     onAdd: () => void;
@@ -20,8 +20,6 @@ type MyState = {
 
 class DialogAdd extends React.Component<Input, MyState> {
 
-    firstRef: React.RefObject<HTMLInputElement>;
-
     constructor(props) {
         super(props);
         this.state = {
@@ -29,7 +27,6 @@ class DialogAdd extends React.Component<Input, MyState> {
             comment: '',
             open: false
         };
-      this.firstRef = createRef();
   
       this.handleChange = this.handleChange.bind(this);
       this.handleChangeComment = this.handleChangeComment.bind(this);

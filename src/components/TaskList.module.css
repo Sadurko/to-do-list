@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.containerLeft {
+    width: 50%;
+    max-width: 700px;
+    background-color: aqua;
+    margin-right: 1rem;
+    padding: 0.5rem;
+}
+
+.containerRight {
+    width: 50%;
+    max-width: 700px;
+    margin-left: 1rem;
+    padding: 0.5rem;
+}
