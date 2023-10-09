@@ -3,17 +3,12 @@
     justify-content: center;
 }
 
-.containerLeft {
+.containerHalf {
     width: 50%;
     max-width: 700px;
-    background-color: aqua;
-    margin-right: 1rem;
+    background-color: #f6f6f6;
+    margin-right: 0.75rem;
+    margin-left: 0.75rem;
     padding: 0.5rem;
-}
-
-.containerRight {
-    width: 50%;
-    max-width: 700px;
-    margin-left: 1rem;
-    padding: 0.5rem;
+    border-radius: 20px;
 }

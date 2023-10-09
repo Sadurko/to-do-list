@@ -59,6 +59,7 @@ const ItemList: FC<Props> = ({ array }) => {
         listItemRefs.current = listItemRefs.current.splice(0, state.length);
     }, [state])
 
+    // handle editing of existing task
     const handleEdit = (index: number) => {
         if (listItemRefs.current != null) {
             const el = listItemRefs.current[index];
@@ -80,10 +81,10 @@ const ItemList: FC<Props> = ({ array }) => {
     const indexes = Array.from(Array(state.length).keys());
     
 
-    
+
     return (
         <div className={styles.container}>
-            <div className={styles.containerLeft}>
+            <div className={styles.containerHalf}>
                 <DialogRemove
                     onConfirmation={() => dispatch({type: 'clear'})}
                     text='Are you sure you want to remove all tasks?'
@@ -101,8 +102,14 @@ const ItemList: FC<Props> = ({ array }) => {
                 <List sx={{ width: '100%' }}>
                     {
                         (state.length === 0)
-                        ? <ListItem>
-                            <ListItemText>No tasks to do</ListItemText>
+                        ? <ListItem
+                            sx={{
+                                backgroundColor: 'white',
+                                my: '10px',
+                                borderRadius: '10px',
+                            }}
+                        >
+                            <ListItemText sx={{ textAlign: 'center' }}>No tasks to do</ListItemText>
                         </ListItem> // if there are no tasks to do
                         : indexes.map(i => (
                             <ListItem
@@ -110,17 +117,23 @@ const ItemList: FC<Props> = ({ array }) => {
                                 secondaryAction={
                                     <>
                                         {/* just using ref={listItemRefs.current[i]} causes error message */}
-                                        <DialogEdit ref={el => listItemRefs.current[i] = el} onAdd={() => handleEdit(i)} inputText={state[i].text} inputComment={state[i].comment || ''} />
+                                        <DialogEdit ref={el => listItemRefs.current[i] = el} onEdit={() => handleEdit(i)} inputText={state[i].text} inputComment={state[i].comment || ''} />
+
+                                        <IconButton edge='end' sx={{ ml: '1rem' }}>
+                                            <NotesOutlinedIcon sx={{ color: 'black' }} />
+                                        </IconButton>
 
                                         <IconButton edge='end' onClick={() => dispatch({type: 'remove', index: i})} sx={{ ml: '1rem' }}>
                                             <DeleteOutlinedIcon sx={{ color: 'black' }}/>
                                         </IconButton>
-                                        <IconButton edge='end' sx={{ ml: '1rem' }}>
-                                            <NotesOutlinedIcon sx={{ color: 'black' }} />
-                                        </IconButton>
                                     </>
                                 }
                                 disablePadding
+                                sx={{
+                                    backgroundColor: 'white',
+                                    my: '10px',
+                                    borderRadius: '10px',
+                                }}
                             >
                                 <ListItemButton role={undefined} onClick={() => dispatch({type: 'toggle', index: i})} dense>
                                     <ListItemIcon>
@@ -143,7 +156,7 @@ const ItemList: FC<Props> = ({ array }) => {
                 <DialogAdd ref={ref} onAdd={() => handleAdd()}/>
             </div>
 
-            <div className={styles.containerLeft}>
+            <div className={styles.containerHalf}>
                 <TaskDetail task={state[1]} />
             </div>
         </div>

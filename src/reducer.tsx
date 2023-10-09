@@ -5,7 +5,7 @@ interface Task {
     comment?: string;
 }
 
-
+// all possible actions
 type ACTION_TYPE = {type: 'add', text: string, comment?: string}
                  | {type: 'remove', index: number}
                  | {type: 'removeDone'}

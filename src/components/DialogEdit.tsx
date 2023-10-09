@@ -12,7 +12,7 @@ import React from 'react'
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 
 type Input = {
-    onAdd: () => void;
+    onEdit: () => void;
     inputText: string;
     inputComment: string;
 }
@@ -21,6 +21,7 @@ type MyState = {
     text: string;
     comment: string;
     open: boolean;
+    emptyInput: boolean;
 };
 
 class DialogAdd extends React.Component<Input, MyState> {
@@ -30,20 +31,42 @@ class DialogAdd extends React.Component<Input, MyState> {
         this.state = {
             text: '',
             comment: '',
-            open: false
+            open: false,
+            emptyInput: false
         };
   
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeText = this.handleChangeText.bind(this);
         this.handleChangeComment = this.handleChangeComment.bind(this);
     }
   
-    handleChange = (event) => {
-      this.setState({text: event.target.value});
+    handleChangeText = (event) => {
+        this.setState({text: event.target.value});
+        this.setState({emptyInput: false});
     }
 
     handleChangeComment = (event) => {
         this.setState({comment: event.target.value});
     }
+
+
+    handleEdit = () => {
+        const { onEdit } = this.props;
+
+        if (this.state.text !== '') {
+            // set emptyInput to false
+            this.setState({emptyInput: false});
+            onEdit();
+        
+            // close dialog window
+            this.setState({open: false});
+        }
+        else {
+            // set emptyInput to ture
+            this.setState({emptyInput: true});
+        }
+    }
+
+
 
     handleClose = () => {
         this.setState({open: false});
@@ -51,16 +74,10 @@ class DialogAdd extends React.Component<Input, MyState> {
 
     handleOpen = () => {
         this.setState({open: true});
-    }
 
-    handleAdd = () => {
-        const { onAdd } = this.props;
-
-        console.log('Text ' + this.state.text + ' Comment ' + this.state.comment)
-
-        onAdd();
-        
-        this.setState({open: false});
+        // initialize text and comment on every dialog open
+        this.setState({text: this.props.inputText});
+        this.setState({comment: this.props.inputComment});
     }
   
   
@@ -79,16 +96,27 @@ class DialogAdd extends React.Component<Input, MyState> {
                 >
                     <DialogTitle>Add new task to do</DialogTitle>
                     <DialogContent>
-                        <DialogContentText>Enter task you need to do:</DialogContentText>
+                        <DialogContentText sx={{ mb: '10px' }}>
+                            Change task you need to do:
+                        </DialogContentText>
+
                         <TextField
                             autoFocus
                             id='task'
                             label='Task'
                             fullWidth
                             variant='outlined'
-                            onChange={this.handleChange}
+                            onChange={this.handleChangeText}
                             defaultValue={this.props.inputText}
+                            error={this.state.emptyInput === true}
+                            helperText={this.state.emptyInput === true ? 'This field can\'t be empty!' : ''}
+                            sx={{ mb: '15px' }}
                         />
+
+                        <DialogContentText sx={{ mb: '10px' }}>
+                            Change commentary if needed:
+                        </DialogContentText>
+
                         <TextField
                             autoFocus
                             id='comment'
@@ -97,14 +125,14 @@ class DialogAdd extends React.Component<Input, MyState> {
                             margin='normal'
                             variant='outlined'
                             onChange={this.handleChangeComment}
+                            defaultValue={this.props.inputComment}
                             multiline
                             rows={4}
-                            defaultValue={this.props.inputComment}
                         />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose}>Cancel</Button>
-                        <Button onClick={this.handleAdd}>Change</Button>
+                        <Button onClick={this.handleEdit}>Change</Button>
                     </DialogActions>
                 </Dialog>
             </>
