@@ -1,4 +1,10 @@
-import React, { FC, useRef, useReducer, useEffect } from 'react';
+import React, {
+    FC,
+    useRef,
+    useReducer,
+    useEffect,
+    useState
+} from 'react';
 import { 
     IconButton,
     List,
@@ -6,7 +12,9 @@ import {
     ListItemText,
     ListItemButton,
     ListItemIcon,
-    Checkbox
+    Checkbox,
+    createTheme,
+    ThemeProvider,
 } from '@mui/material';
 import DialogRemove from './DialogRemove';
 import { reducer, Task } from '../reducer';
@@ -22,11 +30,57 @@ type Props = {
     array: Array<Task>;
 }
 
+// styling list component
+const listTheme = createTheme({
+    components: {
+        MuiListItem: {
+            styleOverrides: {
+                root: ({ theme }) =>
+                    theme.unstable_sx({
+                        backgroundColor: 'white',
+                        my: '10px',
+                        borderRadius: '10px',
+                    }),
+            }
+        },
+        MuiListItemButton: {
+            styleOverrides: {
+                root: {
+                    '&.Mui-selected': {
+                        backgroundColor: '#d3f8d3',
+                        color: 'black',
+                        borderRadius: '10px',
+                        ':hover': {
+                            backgroundColor: 'lightGreen',
+                            borderRadius: '10px',
+                        },
+                    },
+                    '&:hover': {
+                        backgroundColor: 'lightBlue',
+                        borderRadius: '10px',
+                    }
+                }
+            }
+        }
+    }
+})
+
+
 
 const ItemList: FC<Props> = ({ array }) => {
 
     // reducer for working with Task array
     const [state, dispatch] = useReducer(reducer, array)
+
+    // selected for task preview on the right side of screen
+    const [selectedTask, setSelectedTask] = useState(-1);
+
+
+    const handleTaskSelect = (index: number) => {
+
+        // if selected task is clicked, deselect
+        (selectedTask === index) ? setSelectedTask(-1) : setSelectedTask(index);
+    }
     
     
     // saving task array to local storage when changed
@@ -77,23 +131,37 @@ const ItemList: FC<Props> = ({ array }) => {
         }
     }
 
+
+    const handleTaskRemove = (index: number) => {
+        dispatch({type: 'remove', index: index});
+
+        if (selectedTask === index) {
+            setSelectedTask(-1);
+        }
+    }
+
+
     // indexes for list render
     const indexes = Array.from(Array(state.length).keys());
     
 
-
     return (
         <div className={styles.container}>
             <div className={styles.containerHalf}>
+                <ThemeProvider theme={listTheme}>
                 <DialogRemove
-                    onConfirmation={() => dispatch({type: 'clear'})}
+                    onConfirmation={
+                        () => {dispatch({type: 'clear'}); setSelectedTask(-1)}
+                    }
                     text='Are you sure you want to remove all tasks?'
                 >
                     Remove all tasks
                 </DialogRemove>
 
                 <DialogRemove
-                    onConfirmation={() => dispatch({type: 'removeDone'})}
+                    onConfirmation={
+                        () => {dispatch({type: 'removeDone'}); setSelectedTask(-1)}
+                    }
                     text='Are you sure you want to remove all finished tasks?'
                 >
                     Remove all finished tasks
@@ -102,13 +170,7 @@ const ItemList: FC<Props> = ({ array }) => {
                 <List sx={{ width: '100%' }}>
                     {
                         (state.length === 0)
-                        ? <ListItem
-                            sx={{
-                                backgroundColor: 'white',
-                                my: '10px',
-                                borderRadius: '10px',
-                            }}
-                        >
+                        ? <ListItem>
                             <ListItemText sx={{ textAlign: 'center' }}>No tasks to do</ListItemText>
                         </ListItem> // if there are no tasks to do
                         : indexes.map(i => (
@@ -119,23 +181,23 @@ const ItemList: FC<Props> = ({ array }) => {
                                         {/* just using ref={listItemRefs.current[i]} causes error message */}
                                         <DialogEdit ref={el => listItemRefs.current[i] = el} onEdit={() => handleEdit(i)} inputText={state[i].text} inputComment={state[i].comment || ''} />
 
-                                        <IconButton edge='end' sx={{ ml: '1rem' }}>
+                                        <IconButton edge='end' onClick={() => handleTaskSelect(i)} sx={{ ml: '1rem' }}>
                                             <NotesOutlinedIcon sx={{ color: 'black' }} />
                                         </IconButton>
 
-                                        <IconButton edge='end' onClick={() => dispatch({type: 'remove', index: i})} sx={{ ml: '1rem' }}>
+                                        <IconButton edge='end' onClick={() => handleTaskRemove(i)} sx={{ ml: '1rem' }}>
                                             <DeleteOutlinedIcon sx={{ color: 'black' }}/>
                                         </IconButton>
                                     </>
                                 }
                                 disablePadding
-                                sx={{
-                                    backgroundColor: 'white',
-                                    my: '10px',
-                                    borderRadius: '10px',
-                                }}
                             >
-                                <ListItemButton role={undefined} onClick={() => dispatch({type: 'toggle', index: i})} dense>
+                                <ListItemButton
+                                    role={undefined}
+                                    onClick={() => dispatch({type: 'toggle', index: i})}
+                                    dense
+                                    selected={selectedTask === i}
+                                >
                                     <ListItemIcon>
                                         <Checkbox
                                             edge='start'
@@ -154,10 +216,11 @@ const ItemList: FC<Props> = ({ array }) => {
                 </List>
 
                 <DialogAdd ref={ref} onAdd={() => handleAdd()}/>
+                </ThemeProvider>
             </div>
 
             <div className={styles.containerHalf}>
-                <TaskDetail task={state[1]} />
+                <TaskDetail task={(selectedTask !== -1) ? state[selectedTask] : undefined} />
             </div>
         </div>
     );

@@ -80,7 +80,12 @@ class DialogAdd extends React.Component<Input, MyState> {
 
       return (
         <>
-            <Button onClick={this.handleOpen}>Add task</Button>
+            <Button
+                onClick={this.handleOpen}
+                sx={{ mb: '10px' }}
+            >
+                Add task
+            </Button>
 
             <Dialog
                 open={this.state.open}
